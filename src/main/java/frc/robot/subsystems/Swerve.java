@@ -1,14 +1,6 @@
 package frc.robot.subsystems;
 
-import frc.robot.SwerveMod;
-import frc.robot.Constants;
-
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-
-import com.ctre.phoenix.sensors.PigeonIMU;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -17,18 +9,24 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.SwerveMod;
 
 public class Swerve extends SubsystemBase {
     private PoseEstimator s_PoseEstimator = new PoseEstimator();
 
     public SwerveDriveOdometry swerveOdometry;
     public SwerveMod[] mSwerveMods;
-    public PigeonIMU gyro;
+    public Pigeon2 gyro;
     public RobotConfig config;
     private Field2d field = new Field2d();
 
@@ -41,8 +39,7 @@ public class Swerve extends SubsystemBase {
           Constants.AutoConstants.moduleConfig,
           Constants.Swerve.trackWidth);
 
-        gyro = new PigeonIMU(Constants.Swerve.pigeonID);
-        gyro.configFactoryDefault();
+        gyro = new Pigeon2(Constants.Swerve.pigeonID);
         gyro.setYaw(0);
 
         mSwerveMods = new SwerveMod[] {
@@ -156,7 +153,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public Rotation2d getGyroYaw() {
-        return Rotation2d.fromDegrees(gyro.getYaw());
+        return Rotation2d.fromDegrees(gyro.getYaw().getValueAsDouble());
     }
 
     public void setHeading(Rotation2d heading){
